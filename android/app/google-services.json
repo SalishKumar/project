@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "439809284529",
+    "firebase_url": "https://foodhubbb-139d2.firebaseio.com",
+    "project_id": "foodhubbb-139d2",
+    "storage_bucket": "foodhubbb-139d2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:439809284529:android:68d3afeb2adaec5ec38590",
+        "android_client_info": {
+          "package_name": "mac.foodhubbb"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "439809284529-5j18gac81l8ssifemdgad3a6jok8efdn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDTHEgJjbd96tpYgjAU7SIblBcV21hX1YM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "439809284529-5j18gac81l8ssifemdgad3a6jok8efdn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
