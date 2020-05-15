@@ -24,10 +24,7 @@ class MySearchWidget extends StatelessWidget {
               Icons.search,
               color: Colors.red,
             ),
-            suffixIcon: Icon(
-              Icons.sort,
-              color: Colors.red,
-            )
+
         ),
       ),
     );
