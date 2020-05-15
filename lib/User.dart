@@ -4,6 +4,8 @@ class User{
    String _Email;
    String _Phone;
    String _Password;
+   int _id;
+   bool matched = false;
    database db;
    User(){
      _username="";
@@ -11,10 +13,14 @@ class User{
      _Phone="";
      _Password="";
      db = database();
+     _id=0;
    }
 
    void setName(String name){
       _username = name;
+   }
+   void setId(int id){
+     _id=id;
    }
    void setEmail(String email){
      _Email = email;
@@ -26,7 +32,9 @@ class User{
    void ssetPassword(String password){
      _Password = password;
    }
-
+  int getId(){
+     return _id;
+  }
    String getName(){
      return _username;
    }

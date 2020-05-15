@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
         '/':(context)=>drive(),
         'second':(context)=>Login(),
         'third':(context)=>SignUp(),
-        'fourth':(context)=>Home()
+        'fourth':(context)=>Home(),
       },
     );
   }

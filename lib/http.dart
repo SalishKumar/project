@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:foodhubbb/User.dart';
 
 class database{
   String _name;
@@ -33,6 +34,7 @@ class database{
 
           }
       );
+      print(response.body);
       return response.body;
   }
   Future<String> req(String parameter,String value,String argu)async{
@@ -53,5 +55,26 @@ class database{
       return "1";
     }
     return "2";
+  }
+  Future<User> login(String email,String password)async{
+      http.Response response = await http.post(
+          "https://vibrant-millions.000webhostapp.com/login.php",
+          body: {
+            "email" :  email,
+            "password": password,
+          }
+      );
+      User user = User();
+      if(response.body!='0') {
+
+        user.setId(int.parse(jsonDecode(response.body)['cid']));
+        user.setName(jsonDecode(response.body)['name']);
+        user.setEmail(jsonDecode(response.body)['email']);
+        user.matched=true;
+
+      }
+      else
+        user.matched=false;
+      return user;
   }
 }
