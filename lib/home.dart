@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'widgets.dart';
+import 'package:foodhubbb/User.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:foodhubbb/alertDialog.dart';
 class Home extends StatefulWidget {
+  User user = User();
+    Home({this.user});
   @override
   _HomeState createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
-  String email="dsa";
   bool burgerClicked = false;
   bool pizzaClicked = false;
   bool pakistaniClicked = false;
@@ -68,8 +71,8 @@ class _HomeState extends State<Home> {
           child: ListView(
             children: <Widget>[
               UserAccountsDrawerHeader(
-                  accountName: Text("Salish kumar",style: TextStyle(fontWeight: FontWeight.bold)),
-                  accountEmail: Text("Goindanisalish@gmail.com",style: TextStyle(fontWeight: FontWeight.bold)),
+                  accountName: Text(widget.user.getName(),style: TextStyle(fontWeight: FontWeight.bold)),
+                  accountEmail: Text(widget.user.getEmail(),style: TextStyle(fontWeight: FontWeight.bold)),
                   currentAccountPicture: CircleAvatar(
                     backgroundColor: Colors.white,
                     child: Icon(Icons.person),
@@ -98,6 +101,14 @@ class _HomeState extends State<Home> {
                 },
                 trailing: Icon(Icons.settings,color: Colors.red,),
                 title: Text("Account Settings"),
+              ),
+              ListTile(
+                onTap: (){
+                  logoutAlertDialog(context);
+
+                },
+                trailing: Icon(Icons.cancel,color: Colors.red,),
+                title: Text("Logout"),
               ),
             ],
           ),

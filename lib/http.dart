@@ -34,27 +34,18 @@ class database{
 
           }
       );
-      print(response.body);
       return response.body;
   }
-  Future<String> req(String parameter,String value,String argu)async{
-    if(value!=null && value !="") {
+  Future<String> req()async{
       http.Response response = await http.post(
           "https://vibrant-millions.000webhostapp.com/checkUsername.php",
           body: {
-            "argu" :  argu,
-            parameter: value,
+            "name":_name,
+            "email":_email,
+            "phone":_phone
           }
       );
-      var data;
-      if(response.body!='0') {
-        data = json.decode(response.body);
-        return "0";
-      }
-
-      return "1";
-    }
-    return "2";
+      return  await response.body;
   }
   Future<User> login(String email,String password)async{
       http.Response response = await http.post(
@@ -68,13 +59,13 @@ class database{
       if(response.body!='0') {
 
         user.setId(int.parse(jsonDecode(response.body)['cid']));
-        user.setName(jsonDecode(response.body)['name']);
+        user.setName(jsonDecode(response.body)['username']);
         user.setEmail(jsonDecode(response.body)['email']);
         user.matched=true;
 
       }
       else
         user.matched=false;
-      return user;
+      return  await user;
   }
 }

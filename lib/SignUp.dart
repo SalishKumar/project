@@ -161,36 +161,24 @@ class _SignUpState extends State<SignUp> {
                           setState(() {
                             spinner=true;
                           });
-                          String result = await db.req("name", user.getName(),"username");
-                         setState(() {
-                           spinner=false;
-                         });
-                          if(result=="2"){
-                            showAlertDialog(context, "Username field is empty.");
-                            return;
+                          String result = await db.req();
+                          if(result !="0"){
+                            setState(() {
+                              spinner=false;
+                            });
+                            if(result=="1")
+                              showAlertDialog(context,"Username already taken");
+                            else if(result=="2")
+                              showAlertDialog(context,"email already taken");
+                            else if(result=="3")
+                              showAlertDialog(context,"Phone number already taken");
                           }
-                          else if(result=="0"){
-                            showAlertDialog(context, "Username already exist.");
-                            return;
-                          }
-                           result = await db.req("name", user.getEmail(),"email");
-                          if(result=="2"){
-                            showAlertDialog(context, "Email field is empty.");
-                            return;
-                          }
-                          else if(result=="0"){
-                            showAlertDialog(context, "Email already exist.");
-                            return;
-                          }
-                          result = await db.req("name", user.getPhone(),"phone");
-                          if(result=="2"){
-                            showAlertDialog(context, "Phone field is empty.");
-                          }
-                          else if(result=="0"){
-                            showAlertDialog(context, "Phone already exist.");
-                          }
-                          if(user.isNameValid()&&user.isPasswordValid()&&user.isPhoneValid()&&user.isEmailValid()) {
-                            db.createAccount();
+                           if (user.isUserValid()) {
+
+                             print(await db.createAccount());
+                             setState(() {
+                               spinner=false;
+                             });
                             Navigator.pushNamed(context, "second");
                           }
                         },

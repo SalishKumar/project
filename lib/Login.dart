@@ -1,3 +1,6 @@
+import 'package:foodhubbb/drive.dart';
+import 'package:foodhubbb/home.dart';
+
 import 'http.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
@@ -106,11 +109,24 @@ class _LoginState extends State<Login> {
                       ),
                       InkWell(
                         onTap: ()async{
+                          setState(() {
+                            spinner = true;
+                          });
                          User currentUser =   await db.login(user.getEmail(), user.getPassword());
+                         setState(() {
+                           spinner = false;
+                         });
+
                          if(currentUser.matched==true){
-                           print("Loginned");
+                           Navigator.popUntil(context, ModalRoute.withName('/'));
+                           Navigator.pushReplacement(
+                               context,
+                               MaterialPageRoute(
+                                 builder: (context) =>Home(user: currentUser,),
+                               ));
                          }
                          else{
+                           spinner=false;
                            showAlertDialog(context,"Invalid credentials");
                          }
 

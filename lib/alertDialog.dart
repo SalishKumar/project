@@ -24,3 +24,31 @@ showAlertDialog(BuildContext context,String sms) {
     },
   );
 }
+
+void logoutAlertDialog(BuildContext context) {
+  showDialog(
+    barrierDismissible: false,
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title:  Text("Message"),
+        content:  Text("Are you sure you want to logout?"),
+        actions: <Widget>[
+           FlatButton(
+            child:  Text("Logout"),
+            onPressed: () {
+              Navigator.pop(context);
+              Navigator.pushReplacementNamed(context, "/");
+            },
+          ),
+          FlatButton(
+            child:  Text("okay"),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
+}

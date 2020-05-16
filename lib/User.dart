@@ -87,6 +87,8 @@ class User{
         return false;
        }
      }
+     if((_Phone.length<11 || _Phone.length >11) && _Phone.length!=0)
+       return false;
      return true;
    }
    bool isEmailValid() {
@@ -138,5 +140,8 @@ class User{
      if(count>0 && count1>0 && _Password.length>5)
        return true;
      return false;
+   }
+   bool isUserValid(){
+     return isNameValid() && isEmailValid() && isPhoneValid() && isPasswordValid();
    }
 }
