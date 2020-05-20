@@ -48,13 +48,19 @@ class database{
       return  await response.body;
   }
   Future<User> login(String email,String password)async{
-      http.Response response = await http.post(
+    http.Response response;
+    try {
+       response = await http.post(
           "https://vibrant-millions.000webhostapp.com/login.php",
           body: {
-            "email" :  email,
+            "email": email,
             "password": password,
           }
       );
+    }  catch(e){
+      print(e);
+    }
+      print(response.statusCode);
       User user = User();
       if(response.body!='0') {
 
@@ -67,5 +73,11 @@ class database{
       else
         user.matched=false;
       return  await user;
+  }
+   Future<http.Response> getCategory()async{
+    http.Response response = await http.get(
+        "https://vibrant-millions.000webhostapp.com/getCatogories.php"
+    );
+   return await response;
   }
 }

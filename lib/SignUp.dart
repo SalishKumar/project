@@ -173,7 +173,7 @@ class _SignUpState extends State<SignUp> {
                             else if(result=="3")
                               showAlertDialog(context,"Phone number already taken");
                           }
-                           if (user.isUserValid()) {
+                           else if (user.isUserValid()) {
 
                              print(await db.createAccount());
                              setState(() {
