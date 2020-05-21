@@ -52,3 +52,23 @@ void logoutAlertDialog(BuildContext context) {
     },
   );
 }
+void messageAlert(BuildContext context) {
+  showDialog(
+    barrierDismissible: false,
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title:  Text("Message"),
+        content:  Text("Password changed successfully"),
+        actions: <Widget>[
+          FlatButton(
+            child:  Text("okay"),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
+}

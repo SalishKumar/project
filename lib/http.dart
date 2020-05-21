@@ -67,6 +67,8 @@ class database{
         user.setId(int.parse(jsonDecode(response.body)['cid']));
         user.setName(jsonDecode(response.body)['username']);
         user.setEmail(jsonDecode(response.body)['email']);
+        user.setPhone(jsonDecode(response.body)['phone']);
+        user.ssetPassword(jsonDecode(response.body)['password']);
         user.matched=true;
 
       }
@@ -79,5 +81,19 @@ class database{
         "https://vibrant-millions.000webhostapp.com/getCatogories.php"
     );
    return await response;
+  }
+  
+  Future<bool> updatePass(String name,String password)async{
+       http.Response response = await http.post("https://vibrant-millions.000webhostapp.com/updatePassword.php",
+          body: {
+            "username":name,
+            "password":password
+          }
+        );
+     if(response.body=="1")
+       return true;
+     else
+       return false;
+
   }
 }

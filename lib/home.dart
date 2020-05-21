@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:foodhubbb/category.dart';
+import 'package:foodhubbb/editProfile.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'widgets.dart';
 import 'package:foodhubbb/User.dart';
@@ -8,6 +9,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:foodhubbb/alertDialog.dart';
 import 'http.dart';
 import 'package:http/http.dart' as http;
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 class Home extends StatefulWidget {
   User user = User();
     Home({this.user});
@@ -19,120 +21,108 @@ class _HomeState extends State<Home> {
 
 
   database db = database();
-  bool burgerClicked = false;
-  bool pizzaClicked = false;
-  bool pakistaniClicked = false;
-  bool italianClicked = false;
-  bool beveragesClicked = false;
-  bool dailyDealsClicked = false;
-  bool dealsClicked = false;
   Future<List<Category>> getCategory()async{
     http.Response response= await db.getCategory();
     var data=jsonDecode(response.body);
 
     List<Category> listCategory = List();
-    for(var i in data){
-      Category cat = Category(cat_id: i["cat_id"],name: i["cat_name"]);
+    for(var i in data) {
+      Category cat = Category(cat_id: i["cat_id"], name: i["cat_name"]);
       listCategory.add(cat);
     }
-    print(listCategory.length);
     return await listCategory;
 
   }
-
-  void toggle(){
-      burgerClicked = false;
-      pizzaClicked = false;
-      pakistaniClicked = false;
-      italianClicked = false;
-      beveragesClicked = false;
-      dailyDealsClicked = false;
-      dealsClicked = false;
-  }
+  bool spinner = false;
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: (){
-        setState(() {
-          toggle();
-        });
-      },
-      child: Scaffold(
-          resizeToAvoidBottomPadding:false,
+    return Scaffold(
+        resizeToAvoidBottomPadding:false,
+      backgroundColor: Color.fromRGBO(246, 246, 246, 1),
+      appBar: AppBar(
+        iconTheme: new IconThemeData(color: Color.fromRGBO(244, 75, 89, 1)),
+        elevation: 0,
         backgroundColor: Color.fromRGBO(246, 246, 246, 1),
-        appBar: AppBar(
-          iconTheme: new IconThemeData(color: Color.fromRGBO(244, 75, 89, 1)),
-          elevation: 0,
-          backgroundColor: Color.fromRGBO(246, 246, 246, 1),
-          title: Text(
-            "Menu",
-            style: GoogleFonts.lato(
-                color: Colors.black, fontWeight: FontWeight.bold, fontSize: 25),
-          ),
-          actions: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(
-                right: 10,
-              ),
-              child: GestureDetector(
-                onTap: () {
-                  setState(() {
+        title: Text(
+          "Menu",
+          style: GoogleFonts.lato(
+              color: Colors.black, fontWeight: FontWeight.bold, fontSize: 25),
+        ),
+        actions: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(
+              right: 10,
+            ),
+            child: GestureDetector(
+              onTap: () {
+                setState(() {
 
-                  });
-                },
-                child: MyCart(itemCount: 0),
-              ),
-            )
+                });
+              },
+              child: MyCart(itemCount: 0),
+            ),
+          )
+        ],
+      ),
+      drawer: Drawer(
+
+        child: ListView(
+          children: <Widget>[
+            UserAccountsDrawerHeader(
+                accountName: Text(widget.user.getName(),style: TextStyle(fontWeight: FontWeight.bold)),
+                accountEmail: Text(widget.user.getEmail(),style: TextStyle(fontWeight: FontWeight.bold)),
+                currentAccountPicture: CircleAvatar(
+                  backgroundColor: Colors.white,
+                  child: Icon(Icons.person),
+                ),
+                decoration: BoxDecoration(
+                  color:Color.fromRGBO(244, 75, 89, 1)
+                ),
+            ),
+            ListTile(
+              onTap: (){
+
+              },
+              trailing: Icon(Icons.favorite,color: Colors.red,),
+              title: Text("Favourite"),
+            ),
+            ListTile(
+              onTap: (){
+
+              },
+              trailing: Icon(Icons.fastfood,color: Colors.red,),
+              title: Text("Orders"),
+            ),
+            ListTile(
+              onTap: (){
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>editProfile(user: widget.user,),
+                    ));
+              },
+              trailing: Icon(Icons.settings,color: Colors.red,),
+              title: Text("Account Settings"),
+            ),
+            ListTile(
+              onTap: (){
+                logoutAlertDialog(context);
+
+              },
+              trailing: Icon(Icons.cancel,color: Colors.red,),
+              title: Text("Logout"),
+            ),
           ],
         ),
-        drawer: Drawer(
+      ),
+      body: RefreshIndicator(
+        onRefresh: ()async{
+          await Future.delayed(Duration(seconds: 1));
+          setState(() {
 
-          child: ListView(
-            children: <Widget>[
-              UserAccountsDrawerHeader(
-                  accountName: Text(widget.user.getName(),style: TextStyle(fontWeight: FontWeight.bold)),
-                  accountEmail: Text(widget.user.getEmail(),style: TextStyle(fontWeight: FontWeight.bold)),
-                  currentAccountPicture: CircleAvatar(
-                    backgroundColor: Colors.white,
-                    child: Icon(Icons.person),
-                  ),
-                  decoration: BoxDecoration(
-                    color:Color.fromRGBO(244, 75, 89, 1)
-                  ),
-              ),
-              ListTile(
-                onTap: (){
-
-                },
-                trailing: Icon(Icons.favorite,color: Colors.red,),
-                title: Text("Favourite"),
-              ),
-              ListTile(
-                onTap: (){
-
-                },
-                trailing: Icon(Icons.fastfood,color: Colors.red,),
-                title: Text("Orders"),
-              ),
-              ListTile(
-                onTap: (){
-
-                },
-                trailing: Icon(Icons.settings,color: Colors.red,),
-                title: Text("Account Settings"),
-              ),
-              ListTile(
-                onTap: (){
-                  logoutAlertDialog(context);
-
-                },
-                trailing: Icon(Icons.cancel,color: Colors.red,),
-                title: Text("Logout"),
-              ),
-            ],
-          ),
-        ),
-        body: SingleChildScrollView(
+          });
+        },
+        child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
               MySearchWidget(),
@@ -144,19 +134,31 @@ class _HomeState extends State<Home> {
                   future: getCategory(),
                   builder: (BuildContext context,AsyncSnapshot snapshot){
                     if(snapshot.data == null) {
+                      spinner=true;
                       return Text("Loading");
                     }
                     if(snapshot.data !=null){
+                      spinner=false;
                       if(snapshot.data.length == 0)
                         return Text("No category");
                       return ListView.builder(
                         scrollDirection: Axis.horizontal,
                         itemCount: snapshot.data.length,
                         itemBuilder: (BuildContext context,int index){
-                          return Column(
+                          return Row(
                             children: <Widget>[
                               InkWell(
                                 onTap: (){
+                                  snapshot.data[index].isClicked = true;
+                                  for(int i=0;i<snapshot.data.length;++i){
+                                    if(i==index)
+                                      continue;
+                                    snapshot.data[i].isClicked = false;
+
+                                  }
+                                  setState(() {
+
+                                  });
                                 },
                                 child: Column(
                                   children: <Widget>[
@@ -168,15 +170,15 @@ class _HomeState extends State<Home> {
                                         shape: RoundedRectangleBorder(
                                             borderRadius: BorderRadius.circular(50),
                                             side: BorderSide(
-                                              color: Colors.grey
-                                           //   color: dailyDealsClicked?Colors.red:Colors.grey,
+                                              color: snapshot.data[index].isClicked?Colors.red:Colors.grey,
                                             )),
-                                        child: Icon(Icons.fastfood),
+                                        child: Icon(Icons.fastfood
+                                        ),
                                       ),
                                     ),
                                     Text(
                                       snapshot.data[index].name,
-                                      style: TextStyle(color: Colors.black,fontSize: 16),
+                                      style: TextStyle(color: snapshot.data[index].isClicked?Colors.red:Colors.black,fontSize: 16),
                                     )
                                   ],
                                 ),
