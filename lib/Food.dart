@@ -1,9 +1,14 @@
 class Food{
-  String _name;
-  String _Ingredient;
-  String _price;
-  String _discountedPrince;
-
+  String name;
+  String Ingredient;
+  String price;
+  String discountedPrince;
+  int quantity=0;
+  Food(String name,String ingrement,String price){
+    this.name=name;
+    this.Ingredient=ingrement;
+    this.price=price;
+  }
 
 
 

@@ -82,7 +82,21 @@ class database{
     );
    return await response;
   }
-  
+  Future<http.Response> getMenu(String cat_id)async{
+    http.Response response = await http.post(
+        "https://vibrant-millions.000webhostapp.com/getMenu.php",
+      body: {
+          "cat_id":cat_id
+      }
+    );
+    return await response;
+  }
+  Future<http.Response> getMenu2()async{
+    http.Response response = await http.post(
+        "https://vibrant-millions.000webhostapp.com/getMenu2.php"
+    );
+    return await response;
+  }
   Future<bool> updatePass(String name,String password)async{
        http.Response response = await http.post("https://vibrant-millions.000webhostapp.com/updatePassword.php",
           body: {
