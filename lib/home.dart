@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:foodhubbb/Cart.dart';
 import 'package:foodhubbb/Food.dart';
 import 'package:foodhubbb/category.dart';
 import 'package:foodhubbb/editProfile.dart';
@@ -77,7 +78,7 @@ class _HomeState extends State<Home> {
       else{
         for(Food i in cart){
           if(i.name == food.name) {
-            i.quantity++;
+            i.incQuantity();
             flag=1;
           }
         }
@@ -108,9 +109,20 @@ class _HomeState extends State<Home> {
             ),
             child: GestureDetector(
               onTap: () {
-
+                    if(cart.length==0||cart==null){
+                      showAlertDialog(context,"Cart is Empty!!");
+                    }
+                    else{
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>Cart(cart: cart,),
+                          ));
+                    }
               },
-              child: MyCart(itemCount: cart.length),
+              child: MyCart(
+                  itemCount: cart.length,
+              ),
             ),
           )
         ],
@@ -138,6 +150,13 @@ class _HomeState extends State<Home> {
               },
               trailing: Icon(Icons.favorite, color: Colors.red,),
               title: Text("Favourite"),
+            ),
+            ListTile(
+              onTap: () {
+
+              },
+              trailing: Icon(Icons.home, color: Colors.red,),
+              title: Text("My Addresses"),
             ),
             ListTile(
               onTap: () {
@@ -188,7 +207,7 @@ class _HomeState extends State<Home> {
                       builder: (BuildContext context,
                           AsyncSnapshot<List> snapshot) {
                         if(!snapshot.hasData)
-                          return Text("Loading");
+                          return Text("Loading....");
                            if(snapshot.hasData){
                               if(snapshot.data.length==0)
                                 return Text("No Category");
@@ -263,10 +282,12 @@ class _HomeState extends State<Home> {
                     print(snapshot.hasData);
                     if(selectedMenu=="")
                       return Text("Select the category");
+                    if(snapshot.hasData && snapshot.connectionState==ConnectionState.waiting)
+                      return Text("Loading...");
                     if(!snapshot.hasData && snapshot.connectionState==ConnectionState.done)
-                      return Text("No product");
+                      return Text("No product!");
                     if(!snapshot.hasData)
-                      return Text("Loading");
+                      return Text("Loading.....");
                     if(snapshot.hasData){
                       return Container(
                         height: snapshot.data.length.toDouble() * 200,
@@ -370,20 +391,12 @@ class _HomeState extends State<Home> {
                                                         size: 25,
                                                         color: Colors.pinkAccent,),
                                                       onPressed: (){
+                                                        print(cart.length);
                                                         setState(() {
                                                           addInCart(snapshot.data[index]);
-                                                          Scaffold.of(context).showSnackBar(
-                                                              SnackBar(
-                                                                  duration: Duration(seconds: 1),
-                                                                  content: Row(
-                                                                    children: <Widget>[
-                                                                      Icon(Icons.thumb_up),
-                                                                      SizedBox(width: 20,),
-                                                                      Expanded(child: Text(" "+ snapshot.data[index].name + " added")),
-                                                                    ],
-                                                                  ))
-                                                          );
+                                                          snackBar(context,Icons.thumb_up," "+ snapshot.data[index].name + " added");
                                                         });
+                                                        print(cart.length);
                                                       }
                                                   ),
                                                 ),
@@ -410,6 +423,19 @@ class _HomeState extends State<Home> {
           ),
         ),
       ),
+    );
+  }
+  void snackBar(context,IconData icon,String sms){
+    Scaffold.of(context).showSnackBar(
+        SnackBar(
+            duration: Duration(microseconds: 1),
+            content: Row(
+              children: <Widget>[
+                Icon(icon),
+                SizedBox(width: 20,),
+                Expanded(child: Text(sms)),
+              ],
+            ))
     );
   }
 }
