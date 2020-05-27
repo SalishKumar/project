@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:foodhubbb/Food.dart';
 import 'package:foodhubbb/category.dart';
 import 'package:foodhubbb/editProfile.dart';
@@ -22,23 +23,51 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  Future<List> category1;
+  Future<List> food1;
+  double Height = 50;
+  @override
+  initState(){
+    category1 = getCategory();
+    buildFood();
+    super.initState();
+
+  }
+  void rebuild(){
+    category1 = getCategory();
+    food1 = getMenu();
+  }
   bool isCategoryLoaded=false;
   String selectedMenu = "";
   List<Food> cart = List();
   database db = database();
-
-  Future<List<Category>> getCategory() async {
-    http.Response response = await db.getCategory();
-    var data = jsonDecode(response.body);
-
+  void buildFood(){
+    food1 = getMenu();
+  }
+    Future<List> getCategory() async {
+    var response = await db.getCategory();
     List<Category> listCategory = List();
+      var data = jsonDecode(response.body);
+
+
+      for (var i in data) {
+        Category cat = Category(cat_id: i["cat_id"], name: i["cat_name"],img: i["cat_img"]);
+        cat.setImage();
+        if (selectedMenu == cat.cat_id)
+          cat.isClicked = true;
+        listCategory.add(cat);
+      }
+    return  listCategory;
+  }
+  Future<List> getMenu() async {
+    var response = await db.getMenu(selectedMenu);
+    var data = jsonDecode(response.body);
+    List<Food> listFood = List();
     for (var i in data) {
-      Category cat = Category(cat_id: i["cat_id"], name: i["cat_name"]);
-      if (selectedMenu == cat.cat_id)
-        cat.isClicked = true;
-      listCategory.add(cat);
+      Food food = Food(i["f_name"], i["ingredients"], i["f_price"]);
+      listFood.add(food);
     }
-    return await listCategory;
+    return listFood;
   }
   void addInCart(Food food){
       int flag = 0;
@@ -56,24 +85,12 @@ class _HomeState extends State<Home> {
         cart.add(food);
       }
   }
-  Future<List<Food>> getMenu() async {
-    http.Response response = await db.getMenu(selectedMenu);
-    var data = jsonDecode(response.body);
-    List<Food> listFood = List();
-    for (var i in data) {
-      Food food = Food(i["f_name"], i["ingredients"], i["f_price"]);
-      listFood.add(food);
-    }
-    return await listFood;
-  }
-
-  bool spinner = false;
 
   @override
   Widget build(BuildContext context) {
     String category = "0";
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
+
       backgroundColor: Color.fromRGBO(246, 246, 246, 1),
       appBar: AppBar(
         iconTheme: new IconThemeData(color: Color.fromRGBO(244, 75, 89, 1)),
@@ -91,9 +108,7 @@ class _HomeState extends State<Home> {
             ),
             child: GestureDetector(
               onTap: () {
-                setState(() {
 
-                });
               },
               child: MyCart(itemCount: cart.length),
             ),
@@ -154,144 +169,133 @@ class _HomeState extends State<Home> {
       ),
       body: RefreshIndicator(
         onRefresh: () async {
-          await Future.delayed(Duration(seconds: 2));
           setState(() {
-
+              rebuild();
           });
+          await Future.delayed(Duration(seconds: 2));
+
         },
         child: SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                MySearchWidget(),
-                Container(
-                    margin: EdgeInsets.only(top: 10, left: 5),
-                    padding: EdgeInsets.all(5),
-                    height: 120,
-                    child: FutureBuilder(
-                        future: getCategory(),
-                        builder: (BuildContext context,
-                            AsyncSnapshot snapshot) {
-                          if (snapshot.data == null && snapshot.connectionState!=ConnectionState.done) {
-                            isCategoryLoaded = false;
-                            return Container(
-                                height: 20, child: CircularProgressIndicator());
-                          }
-                          else if (snapshot.data != null) {
-                            isCategoryLoaded=false;
-                            if (snapshot.data.length == 0)
-                              return Text("No category");
-                            isCategoryLoaded = true;
-                            print("iam here"+isCategoryLoaded.toString());
-                            return ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                itemCount: snapshot.data.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return Row(
-                                    children: <Widget>[
-                                      InkWell(
-                                        onTap: () {
-                                          selectedMenu =
-                                              snapshot.data[index].cat_id;
-                                          print(selectedMenu);
-                                          snapshot.data[index].isClicked = true;
-                                          for (int i = 0; i <
-                                              snapshot.data.length; ++i) {
-                                            if (i == index)
-                                              continue;
-                                            snapshot.data[i].isClicked = false;
-                                          }
-                                          setState(() {
-
-                                          });
-                                        },
-                                        child: Column(
-                                          children: <Widget>[
-                                            Container(
-                                              width: 80,
-                                              height: 80,
-                                              child: Card(
-                                                color: Colors.white,
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius: BorderRadius
-                                                        .circular(50),
-                                                    side: BorderSide(
-                                                      color: snapshot
-                                                          .data[index].isClicked
-                                                          ? Colors.red
-                                                          : Colors.grey,
-                                                    )),
-                                                child: Icon(Icons.fastfood
-                                                ),
-                                              ),
-                                            ),
-                                            Text(
-                                              snapshot.data[index].name,
-                                              style: TextStyle(
-                                                  color: snapshot.data[index]
-                                                      .isClicked
-                                                      ? Colors.red
-                                                      : Colors.black,
-                                                  fontSize: 16),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                      SizedBox(width: 10,),
-                                    ],
-                                  );
-                                }
-                            );
-                          }
-                          else{
-                            return Text("Pull to refresh");
-                          }
-                        }
-                    )
-                ),
-                Container(
-                  height: MediaQuery.of(context).size.height,
-                  child: FutureBuilder(
-                      future: getMenu(),
-                      builder: (BuildContext context, AsyncSnapshot snapshot) {
-                        if (selectedMenu == "") {
-                          print("Here2 "+isCategoryLoaded.toString());
-                          if(isCategoryLoaded)
-                            return Text("Select the Category");
-                          return Text("");
-                        }
-                        else if (snapshot.data == null && snapshot.connectionState==ConnectionState.done) {
-                          return Text("No Product!");
-                        }
-                        else if(snapshot.data == null)
-                          return Text("Loading....");
-                        else if(snapshot.connectionState != ConnectionState.done)
-                          return Text("Loading....");
-                        else {
+          child: Column(
+            children: <Widget>[
+              MySearchWidget(),
+              Container(
+                  margin: EdgeInsets.only(top: 10, left: 5),
+                  padding: EdgeInsets.all(5),
+                  height: 120,
+                  child: FutureBuilder<List>(
+                      future: category1,
+                      builder: (BuildContext context,
+                          AsyncSnapshot<List> snapshot) {
+                        if(!snapshot.hasData)
+                          return Text("Loading");
+                           if(snapshot.hasData){
+                              if(snapshot.data.length==0)
+                                return Text("No Category");
                           return ListView.builder(
-                              physics: const NeverScrollableScrollPhysics(),
+                              scrollDirection: Axis.horizontal,
                               itemCount: snapshot.data.length,
                               itemBuilder: (BuildContext context, int index) {
-                                return Column(
+                                return Row(
                                   children: <Widget>[
-                                    Stack
-                                      (
-                                      children: <Widget>[
-                                        Center(
-                                          child: Container(
-                                            height: 170,
-                                            width: MediaQuery.of(context).size.width/1.5,
+                                    InkWell(
+                                      onTap: () {
+                                        if(selectedMenu==snapshot.data[index].cat_id)
+                                          return;
+                                        selectedMenu =
+                                            snapshot.data[index].cat_id;
+                                        print(selectedMenu);
+                                        snapshot.data[index].isClicked = true;
+                                        for (int i = 0; i <
+                                            snapshot.data.length; ++i) {
+                                          if (i == index)
+                                            continue;
+                                          snapshot.data[i].isClicked = false;
+                                        }
+                                        setState(() {
+                                            buildFood();
+                                        });
+                                      },
+                                      child: Column(
+                                        children: <Widget>[
+                                          Container(
+                                            width: 80,
+                                            height: 80,
                                             child: Card(
+                                              color: Colors.white,
                                               shape: RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.circular(20
+                                                  borderRadius: BorderRadius
+                                                      .circular(50),
+                                                  side: BorderSide(
+                                                    color: snapshot
+                                                        .data[index].isClicked
+                                                        ? Colors.red
+                                                        : Colors.grey,
                                                   )),
-                                              elevation: 6,
+                                                child: Container(width:50,height:50,margin:EdgeInsets.only(top: 5),child:  ListTile(title: Image.memory(snapshot.data[index].imgInBytes,)),)
                                             ),
                                           ),
+                                          Text(
+                                            snapshot.data[index].name,
+                                            style: TextStyle(
+                                                color: snapshot.data[index]
+                                                    .isClicked
+                                                    ? Colors.red
+                                                    : Colors.black,
+                                                fontSize: 16),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(width: 10,),
+                                  ],
+                                );
+                              }
+                          );
+                        }
+                      }
+                  )
+              ),
+              FutureBuilder<List>(
+                  future: food1,
+                  builder: (BuildContext context,
+                      AsyncSnapshot<List> snapshot) {
+                    print(snapshot.hasData);
+                    if(selectedMenu=="")
+                      return Text("Select the category");
+                    if(!snapshot.hasData && snapshot.connectionState==ConnectionState.done)
+                      return Text("No product");
+                    if(!snapshot.hasData)
+                      return Text("Loading");
+                    if(snapshot.hasData){
+                      return Container(
+                        height: snapshot.data.length.toDouble() * 200,
+                        child: ListView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          addAutomaticKeepAlives: true,
+                            itemCount: snapshot.data.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Column(
+                                children: <Widget>[
+                                  Stack
+                                    (
+                                    children: <Widget>[
+                                      Center(
+                                        child: Container(
+                                          height: 170,
+                                          width: MediaQuery.of(context).size.width/1.5,
+                                          child: Card(
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(20
+                                                )),
+                                            elevation: 6,
+                                          ),
                                         ),
-                                        Column(
-                                          children: <Widget>[
-                                            Row(
-                                          children: <Widget>[
+                                      ),
+                                      Column(
+                                        children: <Widget>[
+                                          Row(
+                                            children: <Widget>[
                                               Container(
                                                 margin: EdgeInsets.only(top: 10, left: 15),
                                                 decoration: BoxDecoration(
@@ -331,7 +335,7 @@ class _HomeState extends State<Home> {
                                                             style: TextStyle(
                                                                 fontSize: 19
                                                             ),
-                                                            maxLines: 4,
+                                                            maxLines: 3,
                                                           )
                                                       ),
                                                     ),
@@ -340,7 +344,7 @@ class _HomeState extends State<Home> {
                                                           left: MediaQuery.of(context).size.width / 5, top: MediaQuery.of(context).size.height / 45
                                                       ),
                                                       child: Text(
-                                                      "Rs "+snapshot.data[index].price,
+                                                        "Rs "+snapshot.data[index].price,
                                                         style: TextStyle(
                                                             fontWeight: FontWeight.bold,
                                                             fontSize: 15
@@ -366,43 +370,44 @@ class _HomeState extends State<Home> {
                                                         size: 25,
                                                         color: Colors.pinkAccent,),
                                                       onPressed: (){
-                                                      setState(() {
-                                                        addInCart(snapshot.data[index]);
-                                                        Scaffold.of(context).showSnackBar(
-                                                          SnackBar(
-                                                              duration: Duration(seconds: 1),
-                                                              content: Row(
-                                                            children: <Widget>[
-                                                              Icon(Icons.thumb_up),
-                                                              SizedBox(width: 20,),
-                                                              Expanded(child: Text(" "+ snapshot.data[index].name + " added")),
-                                                            ],
-                                                          ))
-                                                        );
-                                                      });
+                                                        setState(() {
+                                                          addInCart(snapshot.data[index]);
+                                                          Scaffold.of(context).showSnackBar(
+                                                              SnackBar(
+                                                                  duration: Duration(seconds: 1),
+                                                                  content: Row(
+                                                                    children: <Widget>[
+                                                                      Icon(Icons.thumb_up),
+                                                                      SizedBox(width: 20,),
+                                                                      Expanded(child: Text(" "+ snapshot.data[index].name + " added")),
+                                                                    ],
+                                                                  ))
+                                                          );
+                                                        });
                                                       }
                                                   ),
                                                 ),
                                               ),
                                             ],
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(
-                                      height: 20,
-                                    ),
-                                  ],
-                                );
-                              }
-                          );
-                        }
-                      }
-                  ),
-                )
-              ],
-            )
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                ],
+                              );
+                            }
+                        ),
+                      );
+                    }
+                  }
+              ),
+
+            ],
+          ),
         ),
       ),
     );
