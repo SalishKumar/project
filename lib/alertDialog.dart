@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+
 showAlertDialog(BuildContext context,String sms) {
 
   Widget okButton = FlatButton(
@@ -24,7 +26,31 @@ showAlertDialog(BuildContext context,String sms) {
     },
   );
 }
+showAlertDialog1(BuildContext context,String sms) {
 
+  Widget okButton = FlatButton(
+    child: Text("OK"),
+    onPressed: () {
+      Navigator.pop(context);
+    },
+  );
+
+  AlertDialog alert = AlertDialog(
+    title: Text("Message"),
+    content: Text("$sms"),
+    actions: [
+      okButton,
+    ],
+  );
+
+  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
+}
 void logoutAlertDialog(BuildContext context) {
   showDialog(
     barrierDismissible: false,

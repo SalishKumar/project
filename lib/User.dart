@@ -1,20 +1,24 @@
-import 'http.dart';
+import 'package:foodhubbb/Address.dart';
 
+import 'addressClass.dart';
 class User{
    String _username;
    String _Email;
    String _Phone;
    String _Password;
    int _id;
+   AddressClass address =AddressClass();
+
+
    bool matched = false;
-   database db;
    User(){
      _username="";
      _Email="";
      _Phone="";
      _Password="";
-     db = database();
      _id=0;
+     address.address="Please Choose Address";
+     address.addressType="Address Not selected";
    }
 
    void setName(String name){
@@ -145,4 +149,5 @@ class User{
    bool isUserValid(){
      return isNameValid() && isEmailValid() && isPhoneValid() && isPasswordValid();
    }
+
 }

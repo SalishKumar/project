@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:foodhubbb/addressClass.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:foodhubbb/User.dart';
+import 'alertDialog.dart';
 
 class database{
   String _name;
@@ -9,6 +11,7 @@ class database{
   String _phone;
   String _password;
   String _url;
+  BuildContext context;
   
   database(){
     _name = null;
@@ -17,11 +20,12 @@ class database{
     _phone = null;
     _url = "https://vibrant-millions.000webhostapp.com/Signup.php";
   }
-  void setDetails(String name,String email,String phone,String password){
+  void setDetails(String name,String email,String phone,String password,BuildContext context){
     _name = name;
     _email = email;
     _phone=phone;
     _password=password;
+    this.context = context;
   }
 
   Future<String> createAccount()async{
@@ -61,6 +65,9 @@ class database{
       print(e);
     }
     print(response.statusCode);
+    if(response.statusCode!=200)
+      showAlertDialog(context,"Server not responding try again letter");
+    print(response.body);
       User user = User();
       if(response.body!='0') {
 
@@ -82,20 +89,48 @@ class database{
     );
    return await response;
   }
-  Future<http.Response> getMenu(String cat_id)async{
+  Future<dynamic> getMenu(String cat_id)async{
+    if(cat_id=="")
+      return "";
     http.Response response = await http.post(
         "https://vibrant-millions.000webhostapp.com/getMenu.php",
       body: {
           "cat_id":cat_id
       }
     );
+    print(response.body);
+    if(response.statusCode!=200) {
+      showAlertDialog(context, "Server not responding try again letter");
+    }
     return await response;
   }
   Future<http.Response> getMenu2()async{
     http.Response response = await http.post(
         "https://vibrant-millions.000webhostapp.com/getMenu2.php"
     );
+
     return await response;
+  }
+  Future<String> getAddress(String id)async{
+    http.Response response = await http.post(
+        "https://vibrant-millions.000webhostapp.com/getAddresses.php",
+      body: {
+        "cid":id
+      }
+    );
+    return response.body;
+  }
+  Future<String> addAddress(String id,AddressClass address)async{
+    http.Response response = await http.post(
+        "https://vibrant-millions.000webhostapp.com/addAddress.php",
+        body: {
+          "cid":id,
+          "address":address.address,
+          "addressType":address.addressType
+        }
+    );
+    print(response.body);
+    return response.body;
   }
   Future<bool> updatePass(String name,String password)async{
        http.Response response = await http.post("https://vibrant-millions.000webhostapp.com/updatePassword.php",

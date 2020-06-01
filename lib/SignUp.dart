@@ -157,7 +157,7 @@ class _SignUpState extends State<SignUp> {
                       InkWell(
                         onTap: ()async{
 
-                          db.setDetails(user.getName(), user.getEmail(), user.getPhone(), user.getPassword());
+                          db.setDetails(user.getName(), user.getEmail(), user.getPhone(), user.getPassword(),context);
                           setState(() {
                             spinner=true;
                           });

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:foodhubbb/Address.dart';
 import 'package:foodhubbb/Cart.dart';
 import 'package:foodhubbb/Food.dart';
 import 'package:foodhubbb/category.dart';
@@ -29,6 +30,7 @@ class _HomeState extends State<Home> {
   double Height = 50;
   @override
   initState(){
+
     category1 = getCategory();
     buildFood();
     super.initState();
@@ -65,9 +67,11 @@ class _HomeState extends State<Home> {
     var data = jsonDecode(response.body);
     List<Food> listFood = List();
     for (var i in data) {
-      Food food = Food(i["f_name"], i["ingredients"], i["f_price"]);
+      Food food = Food(i["f_name"], i["ingredients"], i["f_price"],i["f_img"]);
+      food.setImage();
       listFood.add(food);
     }
+    print(response.body);
     return listFood;
   }
   void addInCart(Food food){
@@ -109,6 +113,8 @@ class _HomeState extends State<Home> {
             ),
             child: GestureDetector(
               onTap: () {
+                print("Hello");
+                print(widget.user.address.address);
                     if(cart.length==0||cart==null){
                       showAlertDialog(context,"Cart is Empty!!");
                     }
@@ -116,7 +122,7 @@ class _HomeState extends State<Home> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>Cart(cart: cart,),
+                            builder: (context) =>Cart(cart: cart,user: widget.user,),
                           ));
                     }
               },
@@ -153,9 +159,12 @@ class _HomeState extends State<Home> {
             ),
             ListTile(
               onTap: () {
-
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context)=>Address(user:widget.user,mode: true,))
+                  );
               },
-              trailing: Icon(Icons.home, color: Colors.red,),
+              trailing: Icon(Icons.location_on, color: Colors.red,),
               title: Text("My Addresses"),
             ),
             ListTile(
@@ -330,7 +339,7 @@ class _HomeState extends State<Home> {
                                                     ),
                                                   ],
                                                 ),
-                                                child: Image.asset("images/food1.png",
+                                                child: Image.memory(snapshot.data[index].imgInBytes,
                                                   width: MediaQuery.of(context).size.width/3,
                                                   height: 150,
                                                 ),

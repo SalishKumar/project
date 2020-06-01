@@ -1,12 +1,16 @@
 import 'dart:math';
+import 'package:foodhubbb/Address.dart';
+import 'package:foodhubbb/User.dart';
+
 import 'Food.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 class Cart extends StatefulWidget {
+  User user = User();
   List<Food> cart = List();
-  Cart({this.cart});
+  Cart({this.cart,this.user});
   @override
   _CartState createState() => _CartState();
 }
@@ -117,9 +121,13 @@ class _CartState extends State<Cart> {
               ),
               child: ListTile(
                 leading: Icon(Icons.home),
-                title: Text("Address"),
-                subtitle: Text("SAHGDHJASGDJHASGDHJASG"),
-                trailing: IconButton(icon: Icon(Icons.edit), onPressed: null),
+                title: Text(widget.user.address.addressType),
+                subtitle: Text(widget.user.address.address),
+                trailing: IconButton(icon: Icon(Icons.edit),
+                    onPressed: (){
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context)=>Address(user: widget.user,mode: false,)));
+                    }),
               ),
             ),
             Padding(
