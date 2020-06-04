@@ -68,7 +68,7 @@ class _CartState extends State<Cart> {
                               width: MediaQuery.of(context).size.width/1.6,
                               color: Colors.white,
                               child: ListTile(
-                                leading:Image.asset("images/food1.png"),
+                                leading: Image.memory(widget.cart[index].imgInBytes),
                                 title: AutoSizeText(widget.cart[index].name,maxLines: 1,),
                                 subtitle: AutoSizeText("Quantity: "+widget.cart[index].quantity.toString()+"\nRs "+widget.cart[index].totalPrice.toString(),maxLines: 2),
                               ),
