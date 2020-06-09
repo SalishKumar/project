@@ -42,7 +42,6 @@ class _HomeState extends State<Home> {
     category1 = getCategory();
     food1 = getMenu();
   }
-  bool isCategoryLoaded=false;
   String selectedMenu = "";
   List<Food> cart = List();
   database db = database();
@@ -62,7 +61,7 @@ class _HomeState extends State<Home> {
           cat.isClicked = true;
         listCategory.add(cat);
       }
-    return  listCategory;
+        return  listCategory;
   }
   Future<List> getMenu() async {
     var response = await db.getMenu(selectedMenu);

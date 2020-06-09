@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foodhubbb/Loader.dart';
 import 'Login.dart';
 import 'drive.dart';
 import 'package:foodhubbb/SignUp.dart';
@@ -17,7 +18,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
       routes: <String, WidgetBuilder>{
-        '/': (context) => drive(),
+        '/': (context) => Loader(),
+        'drive':(context)=>drive(),
         'second': (context) => Login(),
         'third': (context) => SignUp(),
         'fourth': (context) => Home()
