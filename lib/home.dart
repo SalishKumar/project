@@ -6,6 +6,7 @@ import 'package:foodhubbb/Cart.dart';
 import 'package:foodhubbb/Food.dart';
 import 'package:foodhubbb/category.dart';
 import 'package:foodhubbb/editProfile.dart';
+import 'package:foodhubbb/order.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'widgets.dart';
 import 'package:foodhubbb/User.dart';
@@ -68,6 +69,7 @@ class _HomeState extends State<Home> {
     List<Food> listFood = List();
     for (var i in data) {
       Food food = Food(i["f_name"], i["ingredients"], i["f_price"],i["f_img"]);
+      food.fid=i["f_id"];
       food.setImage();
       listFood.add(food);
     }
@@ -169,7 +171,10 @@ class _HomeState extends State<Home> {
             ),
             ListTile(
               onTap: () {
-
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context)=>Order())
+                );
               },
               trailing: Icon(Icons.fastfood, color: Colors.red,),
               title: Text("Orders"),

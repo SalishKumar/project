@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-
 showAlertDialog(BuildContext context,String sms) {
 
   Widget okButton = FlatButton(

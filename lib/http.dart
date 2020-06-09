@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:foodhubbb/User.dart';
 import 'alertDialog.dart';
+import 'Food.dart';
 
 class database{
   String _name;
@@ -29,15 +30,21 @@ class database{
   }
 
   Future<String> createAccount()async{
-      http.Response response = await http.post(_url,
+    http.Response response;
+    try {
+       response = await http.post(_url,
           body: {
-            "name":_name,
-            "email":_email,
-            "password":_password,
-            "phone":_phone,
+            "name": _name,
+            "email": _email,
+            "password": _password,
+            "phone": _phone,
 
           }
       );
+    }catch(e){
+      print("Hello");
+      print(e);
+    }
       return response.body;
   }
   Future<String> req()async{
@@ -144,5 +151,21 @@ class database{
      else
        return false;
 
+  }
+  Future<String> placeOrder(String cusID,String price,List<Food> cart,String address1,String addressType)async{
+    String json = jsonEncode(cart);
+
+    http.Response response = await http.post("https://vibrant-millions.000webhostapp.com/placeOrder.php",
+        body: {
+          "cusID":cusID,
+          "price":price,
+          "cart":json,
+          "address":address1,
+        }
+    );
+    print(response.body);
+    if(response.statusCode!=200)
+      return "0";
+    return response.body;
   }
 }

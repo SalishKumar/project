@@ -22,6 +22,7 @@ class _AddressState extends State<Address> {
 
   @override
   void initState() {
+
     addresses = loadAddresses();
     super.initState();
   }
@@ -113,9 +114,11 @@ class _AddressState extends State<Address> {
                   padding: const EdgeInsets.all(10.0),
                   child: GestureDetector(
                     onTap: (){
+                      setState(() {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context)=>AddAddressForm(cid: widget.user.getId(),))
                       );
+                      });
                     },
                     child: Container(
                       width: MediaQuery
