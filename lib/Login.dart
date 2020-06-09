@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'User.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'alertDialog.dart';
 class Login extends StatefulWidget {
   @override
@@ -118,6 +119,9 @@ class _LoginState extends State<Login> {
                          });
 
                          if(currentUser.matched==true){
+                           SharedPreferences preferences = await SharedPreferences.getInstance();
+                           preferences.setString("email",currentUser.getEmail());
+                           preferences.setString("pass",currentUser.getPassword());
                            Navigator.popUntil(context, ModalRoute.withName('/'));
                            Navigator.pushReplacement(
                                context,

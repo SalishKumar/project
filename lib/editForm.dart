@@ -5,6 +5,7 @@ import 'alertDialog.dart';
 import 'http.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 class EditForm extends StatefulWidget {
   User originalUser = User();
   EditForm({@required this.originalUser});
@@ -132,6 +133,8 @@ class _EditFormState extends State<EditForm> {
                        spinner=false;
                      });
                      if(result){
+                       SharedPreferences preferences = await SharedPreferences.getInstance();
+                       preferences.setString("pass",user.getPassword());
                        widget.originalUser.ssetPassword(user.getPassword());
                     await   messageAlert(context);
                      }

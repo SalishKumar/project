@@ -13,6 +13,7 @@ import 'package:foodhubbb/User.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:foodhubbb/alertDialog.dart';
 import 'http.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 
@@ -191,7 +192,10 @@ class _HomeState extends State<Home> {
               title: Text("Account Settings"),
             ),
             ListTile(
-              onTap: () {
+              onTap: () async{
+                SharedPreferences preferences = await SharedPreferences.getInstance();
+                preferences.remove("email");
+                preferences.remove("pass");
                 logoutAlertDialog(context);
               },
               trailing: Icon(Icons.cancel, color: Colors.red,),
