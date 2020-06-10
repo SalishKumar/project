@@ -192,9 +192,6 @@ class _HomeState extends State<Home> {
             ),
             ListTile(
               onTap: () async{
-                SharedPreferences preferences = await SharedPreferences.getInstance();
-                preferences.remove("email");
-                preferences.remove("pass");
                 logoutAlertDialog(context);
               },
               trailing: Icon(Icons.cancel, color: Colors.red,),

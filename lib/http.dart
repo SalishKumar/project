@@ -71,10 +71,8 @@ class database{
     }  catch(e){
       print(e);
     }
-    print(response.statusCode);
     if(response.statusCode!=200)
       showAlertDialog(context,"Server not responding try again letter");
-    print(response.body);
       User user = User();
       if(response.body!='0') {
 
