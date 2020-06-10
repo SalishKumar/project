@@ -1,34 +1,46 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:foodhubbb/http.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'orderClass.dart';
 class Order extends StatefulWidget {
+  String id;
+  Order({this.id});
   @override
   _OrderState createState() => _OrderState();
 }
 
 class _OrderState extends State<Order> {
-  List<OrderClass> orders = [
-    OrderClass(status: "On the way",bill: "200",date: "2020-09-20",orderID: "1"),
-    OrderClass(status: "pending",bill: "220",date: "2020-09-21",orderID: "2"),
-    OrderClass(status: "delivered",bill: "220",date: "2020-09-21",orderID: "3"),
-    OrderClass(status: "cancelled",bill: "220",date: "2020-09-21",orderID: "4"),
-  ];
-  List<OrderClass> select1 = List();
-  List<OrderClass> select2= List();
-  fillList(){
-      for(var i in orders){
-        if(i.status=="On the way"||i.status=="pending"){
-          select1.add(i);
-        }
-        else{
-          select2.add(i);
-        }
-      }
+  database db = database();
 
+  Future<List<OrderClass>> select1;
+
+  Future<List<OrderClass>> select2;
+
+  Future<List<OrderClass>> fillList(String con1,String con2)async{
+   String result =  await db.getOrder(widget.id);
+   var data = jsonDecode(result);
+   List<OrderClass> temp1=List();
+   for(var i in data){
+     if(i["status"]==con1 || i["status"]==con2){
+       temp1.add(
+           OrderClass(
+             status: i["status"],
+             bill: i["totalPrice"],
+             date: i["date"],
+             orderID: i["orderID"],
+             address: i["address1"]
+           ));
+     }
+   }
+   return temp1;
   }
+
   @override
   void initState() {
-    fillList();
+    select1=fillList("pending","on the way");
+    select2=fillList("delivered","cancelled");
     super.initState();
   }
   @override
@@ -70,41 +82,64 @@ class _OrderState extends State<Order> {
         ),
         body: TabBarView(
           children: <Widget>[
-           ListView.builder(
-             itemCount: select1.length,
-               itemBuilder: (context,index){
-                  return Column(
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ListTile(
-                          title: Text("Order#"+select1[index].orderID),
-                          subtitle: Text("Bill:"+select1[index].bill+"\nDate:"+select1[index].date),
-                          trailing: Text("Status\n"+select1[index].status),
-                        ),
-                      ),
-                      Divider(color: Colors.pink,)
-                    ],
-                  );
-               }),
-            ListView.builder(
-                itemCount: select2.length,
-                itemBuilder: (context,index){
-                  return Column(
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ListTile(
-                          title: Text("Order#"+select2[index].orderID),
-                          subtitle: Text("Bill:"+select2[index].bill+"\nDate:"+select2[index].date),
-                          trailing: Text("Status\n"+select2[index].status),
-                        ),
-                      ),
-                      Divider(color: Colors.pink,)
-                    ],
-                  );
-                }),
-
+            FutureBuilder(
+                future: select1,
+                builder: (BuildContext context,
+                    AsyncSnapshot snapshot) {
+                  if(!snapshot.hasData)
+                    return Center(child: CircularProgressIndicator(),);
+                  if(snapshot.hasData){
+                    if(snapshot.data.length==0)
+                      return Center(child: Text("No orders yet!"));
+                    return ListView.builder(
+                        itemCount: snapshot.data.length,
+                        itemBuilder: (context,index){
+                          return Column(
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: ListTile(
+                                  title: Text("Order#"+snapshot.data[index].orderID),
+                          subtitle: Text("Bill:"+snapshot.data[index].bill+"\nDate:"+snapshot.data[index].date+"\nAddress:"+snapshot.data[index].address),
+                                  trailing: Text("Status\n"+snapshot.data[index].status),
+                                ),
+                              ),
+                              Divider(color: Colors.pink,)
+                            ],
+                          );
+                        });
+                  }
+                }
+            ),
+            FutureBuilder(
+                future: select2,
+                builder: (BuildContext context,
+                    AsyncSnapshot snapshot) {
+                  if(!snapshot.hasData)
+                    return Center(child: CircularProgressIndicator(),);
+                  if(snapshot.hasData){
+                    if(snapshot.data.length==0)
+                      return Center(child: Text("No Past orders yet!"));
+                    return ListView.builder(
+                        itemCount: snapshot.data.length,
+                        itemBuilder: (context,index){
+                          return Column(
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: ListTile(
+                                  title: Text("Order#"+snapshot.data[index].orderID),
+                                  subtitle: Text("Bill:"+snapshot.data[index].bill+"\nDate:"+snapshot.data[index].date+"\nAddress:"+snapshot.data[index].address),
+                                  trailing: Text("Status\n"+snapshot.data[index].status),
+                                ),
+                              ),
+                              Divider(color: Colors.pink,)
+                            ],
+                          );
+                        });
+                  }
+                }
+            ),
           ],
         )
       ),

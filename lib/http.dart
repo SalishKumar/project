@@ -127,6 +127,15 @@ class database{
     );
     return response.body;
   }
+  Future<String> getOrder(String id)async{
+    http.Response response = await http.post(
+        "https://vibrant-millions.000webhostapp.com/getOrders.php",
+        body: {
+          "cid":id
+        }
+    );
+    return response.body;
+  }
   Future<String> addAddress(String id,AddressClass address)async{
     http.Response response = await http.post(
         "https://vibrant-millions.000webhostapp.com/addAddress.php",
