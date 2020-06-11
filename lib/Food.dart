@@ -10,6 +10,9 @@ class Food{
   Uint8List imgInBytes;
   int quantity=1;
   String img;
+  Food.fromfOOD(){
+
+  }
   Food(String name,String ingrement,String price,String img){
     this.name=name;
     this.Ingredient=ingrement;

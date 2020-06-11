@@ -153,7 +153,7 @@ class _CartState extends State<Cart> {
                       spinner=false;
                     });
                    if(result!='0'){
-                     showAlertDialog1(context, "Your Order is placed Successfully ");
+                     showAlertDialog1(context, "Your Order is placed Successfully\nYour order will be delivered at your door step shortly ");
                    }
                    else{
                      showAlertDialog(context,"UnKnown Error Try again later");

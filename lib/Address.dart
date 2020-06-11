@@ -22,7 +22,6 @@ class _AddressState extends State<Address> {
 
   @override
   void initState() {
-
     addresses = loadAddresses();
     super.initState();
   }

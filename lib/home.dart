@@ -6,12 +6,14 @@ import 'package:foodhubbb/Cart.dart';
 import 'package:foodhubbb/Food.dart';
 import 'package:foodhubbb/category.dart';
 import 'package:foodhubbb/editProfile.dart';
+import 'package:foodhubbb/foodPage.dart';
 import 'package:foodhubbb/order.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'widgets.dart';
 import 'package:foodhubbb/User.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:foodhubbb/alertDialog.dart';
+import 'foodPage.dart';
 import 'http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -115,7 +117,6 @@ class _HomeState extends State<Home> {
             ),
             child: GestureDetector(
               onTap: () {
-                print("Hello");
                 print(widget.user.address.address);
                     if(cart.length==0||cart==null){
                       showAlertDialog(context,"Cart is Empty!!");
@@ -211,7 +212,7 @@ class _HomeState extends State<Home> {
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
-              MySearchWidget(),
+            //  MySearchWidget(),
               Container(
                   margin: EdgeInsets.only(top: 10, left: 5),
                   padding: EdgeInsets.all(5),
@@ -312,114 +313,129 @@ class _HomeState extends State<Home> {
                             itemBuilder: (BuildContext context, int index) {
                               return Column(
                                 children: <Widget>[
-                                  Stack
-                                    (
-                                    children: <Widget>[
-                                      Center(
-                                        child: Container(
-                                          height: 170,
-                                          width: MediaQuery.of(context).size.width/1.5,
-                                          child: Card(
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(20
-                                                )),
-                                            elevation: 6,
-                                          ),
-                                        ),
-                                      ),
-                                      Column(
+                                  GestureDetector(
+                                    onTap:(){
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(builder: (context)=>FoodPage())
+                                      );
+                                    },
+                                    child: GestureDetector(
+                                      onTap: (){
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(builder: (context)=>FoodPage(food: snapshot.data[index],cart: cart,))
+                                        );
+                                      },
+                                      child: Stack(
                                         children: <Widget>[
-                                          Row(
+                                          Center(
+                                            child: Container(
+                                              height: 170,
+                                              width: MediaQuery.of(context).size.width/1.5,
+                                              child: Card(
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(20
+                                                    )),
+                                                elevation: 6,
+                                              ),
+                                            ),
+                                          ),
+                                          Column(
                                             children: <Widget>[
-                                              Container(
-                                                margin: EdgeInsets.only(top: 10, left: 15),
-                                                decoration: BoxDecoration(
-                                                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                                                  color: Color.fromRGBO(245, 245, 243, 1),
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      color: Colors.grey,
-                                                      offset: Offset(0.0, 1.0),
-                                                      blurRadius: 3.0,
-                                                    ),
-                                                  ],
-                                                ),
-                                                child: Image.memory(snapshot.data[index].imgInBytes,
-                                                  width: MediaQuery.of(context).size.width/3,
-                                                  height: 150,
-                                                ),
-                                              ),
-                                              Container(
-                                                width: MediaQuery.of(context).size.width / 2.5,
-                                                margin: EdgeInsets.only(top: 15),
-                                                child: Column(
-                                                  children: <Widget>[
-                                                    ListTile(
-                                                      title: AutoSizeText(snapshot.data[index].name,
-                                                        style: TextStyle(
-                                                            fontWeight: FontWeight.bold,
-                                                            fontSize: 22
+                                              Row(
+                                                children: <Widget>[
+                                                  Container(
+                                                    margin: EdgeInsets.only(top: 10, left: 15),
+                                                    decoration: BoxDecoration(
+                                                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                                                      color: Color.fromRGBO(245, 245, 243, 1),
+                                                      boxShadow: [
+                                                        BoxShadow(
+                                                          color: Colors.grey,
+                                                          offset: Offset(0.0, 1.0),
+                                                          blurRadius: 3.0,
                                                         ),
-                                                        maxLines: 1,
-                                                      ),
-                                                      subtitle: Container(
-                                                          width: MediaQuery.of(context).size.width,
-                                                          margin: EdgeInsets.only(top: 4),
-                                                          child: AutoSizeText(
-                                                            snapshot.data[index].Ingredient,
+                                                      ],
+                                                    ),
+                                                    child: Image.memory(snapshot.data[index].imgInBytes,
+                                                      width: MediaQuery.of(context).size.width/3,
+                                                      height: 150,
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    width: MediaQuery.of(context).size.width / 2.5,
+                                                    margin: EdgeInsets.only(top: 15),
+                                                    child: Column(
+                                                      children: <Widget>[
+                                                        ListTile(
+                                                          title: AutoSizeText(snapshot.data[index].name,
                                                             style: TextStyle(
-                                                                fontSize: 19
+                                                                fontWeight: FontWeight.bold,
+                                                                fontSize: 22
                                                             ),
-                                                            maxLines: 3,
-                                                          )
+                                                            maxLines: 1,
+                                                          ),
+                                                          subtitle: Container(
+                                                              width: MediaQuery.of(context).size.width,
+                                                              margin: EdgeInsets.only(top: 4),
+                                                              child: AutoSizeText(
+                                                                snapshot.data[index].Ingredient,
+                                                                style: TextStyle(
+                                                                    fontSize: 19
+                                                                ),
+                                                                maxLines: 3,
+                                                              )
+                                                          ),
+                                                        ),
+                                                        Container(
+                                                          margin: EdgeInsets.only(
+                                                              left: MediaQuery.of(context).size.width / 5, top: MediaQuery.of(context).size.height / 45
+                                                          ),
+                                                          child: Text(
+                                                            "Rs "+snapshot.data[index].price,
+                                                            style: TextStyle(
+                                                                fontWeight: FontWeight.bold,
+                                                                fontSize: 15
+                                                            ),
+                                                          ),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    margin: EdgeInsets.only(top: MediaQuery.of(context).size.height/70),
+                                                    height: 75,
+                                                    width: MediaQuery.of(context).size.width/8,
+                                                    child: Card(
+                                                      color: Color.fromRGBO(245, 245, 243, 1),
+                                                      shape: RoundedRectangleBorder(
+                                                          borderRadius: BorderRadius.circular(20)
+                                                      ),
+                                                      elevation: 5,
+                                                      child: IconButton(
+                                                          icon: Icon(
+                                                            Icons.add_circle_outline,
+                                                            size: 25,
+                                                            color: Colors.pinkAccent,),
+                                                          onPressed: (){
+                                                            print(cart.length);
+                                                            setState(() {
+                                                              addInCart(snapshot.data[index]);
+                                                              snackBar(context,Icons.thumb_up," "+ snapshot.data[index].name + " added");
+                                                            });
+                                                            print(cart.length);
+                                                          }
                                                       ),
                                                     ),
-                                                    Container(
-                                                      margin: EdgeInsets.only(
-                                                          left: MediaQuery.of(context).size.width / 5, top: MediaQuery.of(context).size.height / 45
-                                                      ),
-                                                      child: Text(
-                                                        "Rs "+snapshot.data[index].price,
-                                                        style: TextStyle(
-                                                            fontWeight: FontWeight.bold,
-                                                            fontSize: 15
-                                                        ),
-                                                      ),
-                                                    )
-                                                  ],
-                                                ),
-                                              ),
-                                              Container(
-                                                margin: EdgeInsets.only(top: MediaQuery.of(context).size.height/70),
-                                                height: 75,
-                                                width: MediaQuery.of(context).size.width/8,
-                                                child: Card(
-                                                  color: Color.fromRGBO(245, 245, 243, 1),
-                                                  shape: RoundedRectangleBorder(
-                                                      borderRadius: BorderRadius.circular(20)
                                                   ),
-                                                  elevation: 5,
-                                                  child: IconButton(
-                                                      icon: Icon(
-                                                        Icons.add_circle_outline,
-                                                        size: 25,
-                                                        color: Colors.pinkAccent,),
-                                                      onPressed: (){
-                                                        print(cart.length);
-                                                        setState(() {
-                                                          addInCart(snapshot.data[index]);
-                                                          snackBar(context,Icons.thumb_up," "+ snapshot.data[index].name + " added");
-                                                        });
-                                                        print(cart.length);
-                                                      }
-                                                  ),
-                                                ),
+                                                ],
                                               ),
                                             ],
                                           ),
                                         ],
                                       ),
-                                    ],
+                                    ),
                                   ),
                                   SizedBox(
                                     height: 20,
