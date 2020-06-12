@@ -72,7 +72,8 @@ class database{
       print(e);
     }
     if(response.statusCode!=200)
-      showAlertDialog(context,"Server not responding try again letter");
+      print("Server");
+      //showAlertDialog(context,"Server not responding try again letter");
       User user = User();
       if(response.body!='0') {
 
@@ -103,9 +104,8 @@ class database{
           "cat_id":cat_id
       }
     );
-    print(response.body);
     if(response.statusCode!=200) {
-      showAlertDialog(context, "Server not responding try again letter");
+      //showAlertDialog(context, "Server not responding try again letter");
     }
     return await response;
   }
@@ -173,6 +173,10 @@ class database{
     print(response.body);
     if(response.statusCode!=200)
       return "0";
+    return response.body;
+  }
+  Future<String> getMenuForSearch()async {
+    http.Response response = await http.get("https://vibrant-millions.000webhostapp.com/getFoodForSearch.php");
     return response.body;
   }
 }

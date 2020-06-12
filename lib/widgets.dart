@@ -20,10 +20,7 @@ class MySearchWidget extends StatelessWidget {
                 borderSide: BorderSide(color: Colors.red)
             ),
 
-            prefixIcon: Icon(
-              Icons.search,
-              color: Colors.red,
-            ),
+
 
         ),
       ),
