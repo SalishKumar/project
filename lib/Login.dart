@@ -1,4 +1,5 @@
 import 'package:foodhubbb/drive.dart';
+import 'package:foodhubbb/forgetPassword.dart';
 import 'package:foodhubbb/home.dart';
 
 import 'http.dart';
@@ -14,6 +15,7 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  bool eye = true;
   database db = database();
   User user = User();
   bool spinner = false;
@@ -94,8 +96,17 @@ class _LoginState extends State<Login> {
                         onChanged: (Password){
                           user.ssetPassword(Password);
                         },
-                        obscureText: true,
+
+                        obscureText: eye,
                         decoration: InputDecoration(
+                          suffixIcon: IconButton(icon: Icon(Icons.remove_red_eye,color: Colors.grey,), onPressed: (){
+                            setState(() {
+                              if(eye)
+                                eye=false;
+                              else
+                                eye=true;
+                            });
+                          }),
                             focusedBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(
                                     color: Colors.pink
@@ -106,6 +117,18 @@ class _LoginState extends State<Login> {
                               color: Colors.grey,
                               fontWeight: FontWeight.bold,
                             )
+                        ),
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      InkWell(
+                        onTap: (){
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=>ForgetPassword()));
+                        },
+                        child: Container(
+                          alignment: Alignment.topRight,
+                            child: Text("Forget password?",style: TextStyle(color: Colors.blue,decoration: TextDecoration.underline,),)
                         ),
                       ),
                       InkWell(
@@ -136,7 +159,7 @@ class _LoginState extends State<Login> {
 
                         },
                         child: Container(
-                          margin: EdgeInsets.only(top: 80),
+                          margin: EdgeInsets.only(top: 100),
                           width: MediaQuery.of(context).size.width,
                           height: 70,
                           child: Card(
@@ -160,37 +183,6 @@ class _LoginState extends State<Login> {
                         ),
                       ),
                       SizedBox(height: 20,),
-                      InkWell(
-                        onTap: (){
-                        },
-                        child: Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                border: Border.all(color: Colors.black)
-                            ),
-
-                            width: MediaQuery.of(context).size.width,
-                            height: 50,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                Image.asset(
-                                  "images/fb.png",
-                                  height: 30,
-                                  width: 30,
-                                ),
-                                Text(
-                                  "Login With facebook",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20
-                                  ),
-                                )
-                              ],
-                            )
-                        ),
-                      ),
 
                     ],
                   ),

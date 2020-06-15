@@ -12,6 +12,7 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
+  bool eye = true;
   database db = database();
   check email = check();
   User user = User();
@@ -139,8 +140,17 @@ class _SignUpState extends State<SignUp> {
                             user.ssetPassword(Password);
                           });
                         },
-                        obscureText: true,
+                        obscureText: eye,
                         decoration: InputDecoration(
+                            suffixIcon: IconButton(icon: Icon(Icons.remove_red_eye,color: Colors.grey,), onPressed: (){
+                              setState(() {
+                                if(eye)
+                                  eye=false;
+                                else
+                                  eye=true;
+                              });
+                            }),
+
                             focusedBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(
                                     color: Colors.pink
@@ -206,38 +216,6 @@ class _SignUpState extends State<SignUp> {
                         )
                       ),
                       SizedBox(height: 20,),
-                      InkWell(
-                        onTap: (){
-
-                        },
-                        child: Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                border: Border.all(color: Colors.black)
-                            ),
-
-                            width: MediaQuery.of(context).size.width,
-                            height: 50,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                Image.asset(
-                                  "images/fb.png",
-                                  height: 30,
-                                  width: 30,
-                                ),
-                                Text(
-                                  "Sign up With facebook",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20
-                                  ),
-                                )
-                              ],
-                            )
-                        ),
-                      ),
 
                     ],
                   ),

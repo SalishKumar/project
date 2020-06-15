@@ -166,13 +166,6 @@ class _HomeState extends State<Home> {
               ),
               ListTile(
                 onTap: () {
-
-                },
-                trailing: Icon(Icons.favorite, color: Colors.red,),
-                title: Text("Favourite"),
-              ),
-              ListTile(
-                onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context)=>Address(user:widget.user,mode: true,))

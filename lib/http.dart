@@ -179,4 +179,42 @@ class database{
     http.Response response = await http.get("https://vibrant-millions.000webhostapp.com/getFoodForSearch.php");
     return response.body;
   }
+  Future<String> getOrderDetails(String orderID)async {
+    http.Response response = await http.post("https://vibrant-millions.000webhostapp.com/getOrderDetails.php",
+    body: {
+      "oid":orderID
+    }
+    );
+    print(response.body);
+    return response.body;
+  }
+  Future<String> makeOrderDeliver(String orderID)async{
+    http.Response response = await http.post("https://vibrant-millions.000webhostapp.com/makeItDeliver.php",
+        body: {
+          "oid":orderID
+        }
+    );
+    return response.body;
+  }
+  Future<String> recoverPassword(String email)async{
+      http.Response response = await http.post("https://vibrant-millions.000webhostapp.com/try.php",
+        body: {
+        "email":email
+        }
+      );
+      return response.body;
+  }
+  Future<bool> updatePassAfterAuthentication(String email,String password)async{
+    http.Response response = await http.post("https://vibrant-millions.000webhostapp.com/forgetPasswordUpdate.php",
+        body: {
+          "email":email,
+          "password":password
+        }
+    );
+    if(response.body=="1")
+      return true;
+    else
+      return false;
+
+  }
 }

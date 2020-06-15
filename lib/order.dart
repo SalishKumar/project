@@ -1,7 +1,8 @@
 import 'dart:convert';
-
+import 'alertDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:foodhubbb/http.dart';
+import 'package:foodhubbb/orderDetails.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'orderClass.dart';
 class Order extends StatefulWidget {
@@ -12,6 +13,65 @@ class Order extends StatefulWidget {
 }
 
 class _OrderState extends State<Order> {
+  Widget makeTile(String orderID,String Bill,String Date,String addresss,String status){
+
+    if(status=="pending") {
+      return  Column(
+        children: <Widget>[
+          // ignore: missing_return
+          Padding(
+              padding: const EdgeInsets.all(8.0),
+              child:ListTile(
+                title: Text("Order#" + orderID),
+                subtitle: Text(
+                    "Bill:" + Bill + "\nDate:" + Date + "\nAddress:" + addresss),
+                trailing: Container(
+                  color: Colors.grey,
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Text(status,style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+                  ),
+                ),
+              )
+          ),
+          Divider(color: Colors.pink,)
+        ],
+      );
+    }
+    return  Column(
+      children: <Widget>[
+        // ignore: missing_return
+        Padding(
+            padding: const EdgeInsets.all(8.0),
+            child:ListTile(
+              title: Text("Order#" + orderID),
+              subtitle: Text(
+                  "Bill:" + Bill + "\nDate:" + Date + "\nAddress:" + addresss),
+              trailing: GestureDetector(
+                onTap: (){
+                  setState(() async{
+                    await deliveryAlertDialog(context,orderID);
+                  });
+                  setState(() {
+
+                  });
+                },
+                child: Container(
+
+                  color: Colors.pink,
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Text(status,style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+                  ),
+                ),
+              ),
+            )
+        ),
+        Divider(color: Colors.pink,)
+      ],
+    );
+
+  }
   database db = database();
 
   Future<List<OrderClass>> select1;
@@ -38,10 +98,13 @@ class _OrderState extends State<Order> {
   }
 
   @override
-  void initState() {
+    void initState() {
+      buildit();
+      super.initState();
+    }
+  void buildit(){
     select1=fillList("pending","on the way");
     select2=fillList("delivered","cancelled");
-    super.initState();
   }
   @override
   Widget build(BuildContext context) {
@@ -57,6 +120,13 @@ class _OrderState extends State<Order> {
             style: GoogleFonts.lato(
                 color: Colors.black, fontWeight: FontWeight.bold, fontSize: 25),
           ),
+          actions: <Widget>[
+            IconButton(icon: Icon(Icons.refresh,color: Colors.pink,size: 30,), onPressed: (){
+              setState(() {
+                buildit();
+              });
+            })
+          ],
           bottom: TabBar(
               indicatorColor: Color.fromRGBO(244, 75, 89, 1),
               tabs: [
@@ -86,26 +156,21 @@ class _OrderState extends State<Order> {
                 future: select1,
                 builder: (BuildContext context,
                     AsyncSnapshot snapshot) {
+                  print(snapshot.hasData);
                   if(!snapshot.hasData)
                     return Center(child: CircularProgressIndicator(),);
+                  print(snapshot.hasData);
                   if(snapshot.hasData){
                     if(snapshot.data.length==0)
                       return Center(child: Text("No orders yet!"));
                     return ListView.builder(
                         itemCount: snapshot.data.length,
                         itemBuilder: (context,index){
-                          return Column(
-                            children: <Widget>[
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: ListTile(
-                                  title: Text("Order#"+snapshot.data[index].orderID),
-                          subtitle: Text("Bill:"+snapshot.data[index].bill+"\nDate:"+snapshot.data[index].date+"\nAddress:"+snapshot.data[index].address),
-                                  trailing: Text("Status\n"+snapshot.data[index].status),
-                                ),
-                              ),
-                              Divider(color: Colors.pink,)
-                            ],
+                          return InkWell(
+                            onTap: (){
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=>OrderDetails(order: snapshot.data[index],)));
+                            },
+                            child: makeTile(snapshot.data[index].orderID, snapshot.data[index].bill, snapshot.data[index].date, snapshot.data[index].address, snapshot.data[index].status),
                           );
                         });
                   }
@@ -115,26 +180,33 @@ class _OrderState extends State<Order> {
                 future: select2,
                 builder: (BuildContext context,
                     AsyncSnapshot snapshot) {
+                  print(snapshot.hasData);
                   if(!snapshot.hasData)
                     return Center(child: CircularProgressIndicator(),);
+                  print(snapshot.hasData);
                   if(snapshot.hasData){
                     if(snapshot.data.length==0)
                       return Center(child: Text("No Past orders yet!"));
                     return ListView.builder(
                         itemCount: snapshot.data.length,
                         itemBuilder: (context,index){
-                          return Column(
-                            children: <Widget>[
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: ListTile(
-                                  title: Text("Order#"+snapshot.data[index].orderID),
-                                  subtitle: Text("Bill:"+snapshot.data[index].bill+"\nDate:"+snapshot.data[index].date+"\nAddress:"+snapshot.data[index].address),
-                                  trailing: Text("Status\n"+snapshot.data[index].status),
+                          return InkWell(
+                            onTap: (){
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=>OrderDetails(order: snapshot.data[index],)));
+                            },
+                            child: Column(
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: ListTile(
+                                    title: Text("Order#"+snapshot.data[index].orderID),
+                                    subtitle: Text("Bill:"+snapshot.data[index].bill+"\nDate:"+snapshot.data[index].date+"\nAddress:"+snapshot.data[index].address),
+                                    trailing: Text("Status\n"+snapshot.data[index].status),
+                                  ),
                                 ),
-                              ),
-                              Divider(color: Colors.pink,)
-                            ],
+                                Divider(color: Colors.pink,)
+                              ],
+                            ),
                           );
                         });
                   }
