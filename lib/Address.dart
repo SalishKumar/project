@@ -60,7 +60,6 @@ class _AddressState extends State<Address> {
               style: GoogleFonts.lato(
                   color: Colors.black, fontWeight: FontWeight.bold, fontSize: 25),
             ),
-
           ),
           body: Stack(
             children: <Widget>[

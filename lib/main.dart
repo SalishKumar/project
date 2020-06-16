@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:foodhubbb/Loader.dart';
 import 'package:foodhubbb/editPass.dart';
 import 'package:foodhubbb/foodPage.dart';
+import 'package:foodhubbb/googleMaps.dart';
 import 'package:foodhubbb/temp.dart';
 import 'Login.dart';
 import 'drive.dart';
@@ -21,7 +22,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
       routes: <String, WidgetBuilder>{
-        '/': (context) => Loader(),
+        '/': (context) => Map(),
         'drive':(context)=>drive(),
         'second': (context) => Login(),
         'third': (context) => SignUp(),

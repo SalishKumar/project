@@ -80,8 +80,10 @@ class _OrderState extends State<Order> {
 
   Future<List<OrderClass>> fillList(String con1,String con2)async{
    String result =  await db.getOrder(widget.id);
-   var data = jsonDecode(result);
    List<OrderClass> temp1=List();
+   if(result=="0")
+     return temp1;
+   var data = jsonDecode(result);
    for(var i in data){
      if(i["status"]==con1 || i["status"]==con2){
        temp1.add(
