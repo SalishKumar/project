@@ -111,12 +111,14 @@ class _AddressState extends State<Address> {
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: GestureDetector(
-                    onTap: (){
-                      setState(() {
-                      Navigator.push(context,
+                    onTap: ()async{
+                      await Navigator.push(context,
                           MaterialPageRoute(builder: (context)=>AddAddressForm(cid: widget.user.getId(),))
                       );
+                      setState(() {
+
                       });
+
                     },
                     child: Container(
                       width: MediaQuery

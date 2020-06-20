@@ -119,25 +119,31 @@ class _HomeState extends State<Home> {
             ),
           ),
           actions: <Widget>[
-            IconButton(icon: Icon(Icons.search,size: 30,), onPressed: (){
-               showSearch(context: context, delegate: DataSearch(cart));
+            IconButton(icon: Icon(Icons.search,size: 30,), onPressed: ()async{
+               await showSearch(context: context, delegate: DataSearch(cart));
+               setState(() {
+
+               });
             }),
             Padding(
               padding: const EdgeInsets.only(
                 right: 10,
               ),
               child: GestureDetector(
-                onTap: () {
+                onTap: () async{
                   print(widget.user.address.address);
                       if(cart.length==0||cart==null){
                         showAlertDialog(context,"Cart is Empty!!");
                       }
                       else{
-                        Navigator.push(
+                       await Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) =>Cart(cart: cart,user: widget.user,),
                             ));
+                       setState(() {
+
+                       });
                       }
                 },
                 child: MyCart(
@@ -540,47 +546,22 @@ class DataSearch extends SearchDelegate {
   }
   @override
   Widget buildLeading(BuildContext context) {
-
-    return IconButton(icon: Icon(Icons.arrow_back,color: Colors.red,),onPressed: (){
-      close(context, null);
-    },)
-    ;
+      return
+      IconButton(icon: Icon(Icons.arrow_back_ios,color: Colors.red,),onPressed: (){
+        Navigator.pop(context);
+      },);
   }
+  String hello;
   @override
   Widget buildResults(BuildContext context) {
-    return null;
+    return Text(hello);
   }
-//    return Container(
-//      child: Text(len),
-//    );
-//  }
-//  @override
-//  Widget buildSuggestions(BuildContext context) {
-//      return FutureBuilder(
-//        future: searchMenu1,
-//          builder: (context, snapshot){
-//              if(!snapshot.data)
-//                return CircularProgressIndicator();
-//              for(var i in snapshot.data){
-//                print(i);
-//              }
-//               if(snapshot.data){
-//                if(query.isEmpty)
-//                  return Center(child: Text("Food is waiting"),);
-//                  return Center(child: Text("Loaded is waiting"),);
-//
 
-              //}
-//          },
-//      );
-//
-//
-//  }
   @override
   Widget buildSuggestions(BuildContext context) {
     List<String> suggest1=List();
     List<String> suggestFood = List();
-    int myIndex;
+    int myIndex,ind;
     return FutureBuilder(
       future: searchMenu1,
         builder: (context,snapshot){
@@ -591,26 +572,27 @@ class DataSearch extends SearchDelegate {
             suggest1= suggestFood.where((name)=>name.startsWith(query)).toList();
             if (query.isEmpty)
               return Center(child: Text("Search Food"),);
-            return InkWell(
-              onTap: () {
-                print(myIndex);
-                Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                    FoodPage(food: searchMenu[myIndex], cart: cart,)));
-              },
-              child: ListView.builder(itemBuilder: (context, index) {
-                print(index);
-                print("hello:"+snapshot.connectionState.toString());
-                myIndex = int.parse(suggest1[index].substring(
-                    suggest1[index].length - 1, suggest1[index].length));
-                return ListTile(
+            return ListView.builder(itemBuilder: (context, index) {
+              ind = index;
+              myIndex = int.parse(suggest1[index].substring(
+                  suggest1[index].length - 1, suggest1[index].length));
+              return InkWell(
+                onTap: () {
+                  int temp = int.parse(suggest1[index].substring(
+                      suggest1[index].length - 1, suggest1[index].length));
+                  print(index);
+                   Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                     FoodPage(food: searchMenu[temp], cart: cart,)));
+                },
+                child: ListTile(
                   title: Text(suggest1[index].substring(0,suggest1[index].length-1)),
                   leading: Container(width: 80,
                       child: Image.memory(searchMenu[myIndex].imgInBytes)),
                   subtitle: Text("Rs" + searchMenu[myIndex].price),
-                );
-              },
-                itemCount: suggest1.length,
-              ),
+                ),
+              );
+            },
+              itemCount: suggest1.length,
             );
           }
     });

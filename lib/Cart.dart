@@ -131,9 +131,12 @@ class _CartState extends State<Cart> {
                   title: Text(widget.user.address.addressType),
                   subtitle: Text(widget.user.address.address),
                   trailing: IconButton(icon: Icon(Icons.edit),
-                      onPressed: (){
-                      Navigator.push(context,
+                      onPressed: ()async{
+                     await Navigator.push(context,
                           MaterialPageRoute(builder: (context)=>Address(user: widget.user,mode: false,)));
+                     setState(() {
+
+                     });
                       }),
                 ),
               ),
@@ -152,7 +155,10 @@ class _CartState extends State<Cart> {
                     setState(() {
                       spinner=false;
                     });
-                   if(result!='0'){
+                    if(result=='2'){
+                      showAlertDialog1(context, "It might be net connectivity issue or server fault Please try again later");
+                    }
+                   else if(result!='0'){
                      showAlertDialog1(context, "Your Order is placed Successfully\nYour order will be delivered at your door step shortly ");
                    }
                    else{

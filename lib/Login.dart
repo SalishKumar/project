@@ -140,8 +140,10 @@ class _LoginState extends State<Login> {
                          setState(() {
                            spinner = false;
                          });
-
-                         if(currentUser.matched==true){
+                         if(currentUser.getName()=="@"){
+                           showAlertDialog1(context, "It might be server issue or network issue on your side please try again later");
+                         }
+                         else if(currentUser.matched==true){
                            SharedPreferences preferences = await SharedPreferences.getInstance();
                            preferences.setString("email",currentUser.getEmail());
                            preferences.setString("pass",currentUser.getPassword());

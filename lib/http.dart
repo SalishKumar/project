@@ -69,7 +69,10 @@ class database{
           }
       );
     }  catch(e){
-      print(e);
+      print("je");
+      User user =User();
+      user.setName("@");
+      return user;
     }
     if(response.statusCode!=200)
       print("Server");
@@ -161,16 +164,21 @@ class database{
   }
   Future<String> placeOrder(String cusID,String price,List<Food> cart,String address1,String addressType)async{
     String json = jsonEncode(cart);
-
-    http.Response response = await http.post("https://vibrant-millions.000webhostapp.com/placeOrder.php",
-        body: {
-          "cusID":cusID,
-          "price":price,
-          "cart":json,
-          "address":address1,
-        }
-    );
-    print(response.body);
+    http.Response response;
+    try {
+      response = await http.post(
+          "https://vibrant-millions.000webhostapp.com/placeOrder.php",
+          body: {
+            "cusID": cusID,
+            "price": price,
+            "cart": json,
+            "address": address1,
+          }
+      );
+    }catch(e){
+      print("Hello");
+      return "2";
+    }
     if(response.statusCode!=200)
       return "0";
     return response.body;

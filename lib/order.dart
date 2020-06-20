@@ -48,13 +48,8 @@ class _OrderState extends State<Order> {
               subtitle: Text(
                   "Bill:" + Bill + "\nDate:" + Date + "\nAddress:" + addresss),
               trailing: GestureDetector(
-                onTap: (){
-                  setState(() async{
+                onTap: ()async{
                     await deliveryAlertDialog(context,orderID);
-                  });
-                  setState(() {
-
-                  });
                 },
                 child: Container(
 
