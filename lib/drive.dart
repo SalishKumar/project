@@ -8,21 +8,34 @@ class drive extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromRGBO(255, 255, 255, 1),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            RaisedButton(onPressed: (){
-       Navigator.pushNamed(context, 'second');
-          //      apicall();
-            },
-            child: Text("Login"),),
-            RaisedButton(
-              onPressed: ()async{
+            Center(
+              child: Image.asset("images/logo.jpeg"),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                RaisedButton(
+                  color: Colors.pink,
+                  onPressed: (){
+                  Navigator.pushNamed(context, 'second');
+                        apicall();
+                },
+                  child: Text("Login",style: TextStyle(color: Colors.white)),),
+                RaisedButton(
+                  color: Colors.pink,
+                  onPressed: ()async{
 
-                Navigator.pushNamed(context, "third");
-              },
-              child: Text("Signup"),)
+                    Navigator.pushNamed(context, "third");
+                  },
+                  child: Text(
+                    "Signup",style: TextStyle(color: Colors.white),),)
+              ],
+            )
           ],
         ),
       ),

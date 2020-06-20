@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
       routes: <String, WidgetBuilder>{
-        '/': (context) => Map(),
+        '/': (context) => Loader(),
         'drive':(context)=>drive(),
         'second': (context) => Login(),
         'third': (context) => SignUp(),

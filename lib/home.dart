@@ -593,16 +593,17 @@ class DataSearch extends SearchDelegate {
               return Center(child: Text("Search Food"),);
             return InkWell(
               onTap: () {
+                print(myIndex);
                 Navigator.push(context, MaterialPageRoute(builder: (context) =>
                     FoodPage(food: searchMenu[myIndex], cart: cart,)));
               },
               child: ListView.builder(itemBuilder: (context, index) {
-
+                print(index);
                 print("hello:"+snapshot.connectionState.toString());
                 myIndex = int.parse(suggest1[index].substring(
                     suggest1[index].length - 1, suggest1[index].length));
                 return ListTile(
-                  title: Text(suggest1[index]),
+                  title: Text(suggest1[index].substring(0,suggest1[index].length-1)),
                   leading: Container(width: 80,
                       child: Image.memory(searchMenu[myIndex].imgInBytes)),
                   subtitle: Text("Rs" + searchMenu[myIndex].price),
