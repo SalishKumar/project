@@ -172,6 +172,13 @@ class _SignUpState extends State<SignUp> {
                             spinner=true;
                           });
                           String result = await db.req();
+                          if(result=="@"){
+                            setState(() {
+                              spinner=false;
+                            });
+                            showAlertDialog1(context, "  It may be server issue or network problem on your side try again later");
+                            return;
+                          }
                           if(result !="0"){
                             setState(() {
                               spinner=false;
@@ -185,10 +192,14 @@ class _SignUpState extends State<SignUp> {
                           }
                            else if (user.isUserValid()) {
 
-                             print(await db.createAccount());
+                             String result= await db.createAccount();
                              setState(() {
                                spinner=false;
                              });
+                             if(result=="@"){
+                               showAlertDialog1(context, "  It may be server issue or network problem on your side try again later");
+                               return;
+                             }
                             Navigator.pushNamed(context, "second");
                           }
                         },

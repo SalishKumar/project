@@ -62,12 +62,25 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                     setState(() {
                       spinner=true;
                     });
+                    if(email==null)
+                      email="";
+                    if(email==""){
+                      setState(() {
+                        spinner=false;
+                      });
+                      showAlertDialog1(context, "Email empty");
+
+                      return;
+                    }
                     database db = database();
                     String result = await db.recoverPassword(email);
                     setState(() {
                       spinner=false;
                     });
-                    if(result =="Wrong email"){
+                    if(result =="@"){
+                        showAlertDialog(context, "This might be server error or network problem on your side please try again later");
+                    }
+                    else if(result =="Wrong email"){
                       showAlertDialog(context, "This email is not registered!");
                     }
                     else{

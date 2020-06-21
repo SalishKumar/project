@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:foodhubbb/http.dart';
 import 'addressClass.dart';
 import 'package:foodhubbb/User.dart';
-
+import 'alertDialog.dart';
 class Address extends StatefulWidget {
   User user =User();
   bool mode;
@@ -25,10 +25,20 @@ class _AddressState extends State<Address> {
     addresses = loadAddresses();
     super.initState();
   }
-
+  bool net = true;
   Future<List> loadAddresses()async{
+    List<AddressClass> listAddress = List();
        String response= await db.getAddress(widget.user.getId().toString());
-      List<AddressClass> listAddress = List();
+       if(response=="@"){
+         net=false;
+         AddressClass address = AddressClass();
+         address.address = "-";
+         address.addressType = "";
+         listAddress.add(address);
+         showAlertDialog1(context,"It may be a server error or network problem on your side please try again later");
+         return  listAddress;
+       }
+
       var data = jsonDecode(response);
 
 
@@ -66,6 +76,9 @@ class _AddressState extends State<Address> {
               FutureBuilder(
                   future: addresses,
                   builder: (context, snapshot) {
+                    if(!net){
+                      return Center(child: Text("Try again Later"),);
+                    }
                     if (!snapshot.hasData && snapshot.connectionState==ConnectionState.done) {
                       return Center(child: Text("No address Added yet"));
                     }

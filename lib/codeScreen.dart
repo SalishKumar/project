@@ -63,6 +63,12 @@ class _CodeScreenState extends State<CodeScreen> {
               padding: const EdgeInsets.all(10.0),
               child: InkWell(
                   onTap: ()async{
+                    if(code==null)
+                      code="";
+                    if(code==""){
+                      showAlertDialog1(context, "Code empty");
+                      return;
+                    }
                     if(code==widget.code){
                       Navigator.popUntil(context, ModalRoute.withName("second"));
                       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>EditPass1(email: widget.email,)));

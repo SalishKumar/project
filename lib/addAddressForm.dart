@@ -200,7 +200,11 @@ class _AddAddressFormState extends State<AddAddressForm> {
                       setState(() {
                         Spinner=false;
                       });
-                     if(result=="1"){
+                      if(result=="@"){
+                        showAlertDialog1(context,"It may be a server error or network problem on your side please try again later");
+                        return;
+                      }
+                     else if(result=="1"){
                        await showAlertDialog1(context, "Address added Successfully");
                      }
                      else{

@@ -42,21 +42,25 @@ class database{
           }
       );
     }catch(e){
-      print("Hello");
-      print(e);
+      return "@";
     }
       return response.body;
   }
   Future<String> req()async{
-      http.Response response = await http.post(
+    http.Response response;
+    try {
+     response = await http.post(
           "https://vibrant-millions.000webhostapp.com/checkUsername.php",
           body: {
-            "name":_name,
-            "email":_email,
-            "phone":_phone
+            "name": _name,
+            "email": _email,
+            "phone": _phone
           }
       );
-      return  await response.body;
+    }catch(e){
+      return "@";
+    }
+      return   response.body;
   }
   Future<User> login(String email,String password)async{
     http.Response response;
@@ -120,12 +124,17 @@ class database{
     return await response;
   }
   Future<String> getAddress(String id)async{
-    http.Response response = await http.post(
+    http.Response response;
+    try{
+   response = await http.post(
         "https://vibrant-millions.000webhostapp.com/getAddresses.php",
       body: {
         "cid":id
       }
     );
+    }catch(e){
+      return "@";
+    }
     return response.body;
   }
   Future<String> getOrder(String id)async{
@@ -138,14 +147,19 @@ class database{
     return response.body;
   }
   Future<String> addAddress(String id,AddressClass address)async{
-    http.Response response = await http.post(
-        "https://vibrant-millions.000webhostapp.com/addAddress.php",
-        body: {
-          "cid":id,
-          "address":address.address,
-          "addressType":address.addressType
-        }
-    );
+    http.Response response;
+    try {
+      response = await http.post(
+          "https://vibrant-millions.000webhostapp.com/addAddress.php",
+          body: {
+            "cid": id,
+            "address": address.address,
+            "addressType": address.addressType
+          }
+      );
+    }catch(e){
+      return "@";
+    }
     print(response.body);
     return response.body;
   }
@@ -205,11 +219,17 @@ class database{
     return response.body;
   }
   Future<String> recoverPassword(String email)async{
-      http.Response response = await http.post("https://vibrant-millions.000webhostapp.com/try.php",
-        body: {
-        "email":email
-        }
-      );
+    http.Response response;
+      try {
+         response = await http.post(
+            "https://vibrant-millions.000webhostapp.com/try.php",
+            body: {
+              "email": email
+            }
+        );
+      }catch(e){
+        return "@";
+      }
       return response.body;
   }
   Future<bool> updatePassAfterAuthentication(String email,String password)async{
